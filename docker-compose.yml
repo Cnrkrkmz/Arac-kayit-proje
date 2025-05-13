@@ -8,6 +8,7 @@ services:
       POSTGRES_USER: myuser
       POSTGRES_PASSWORD: mypass
     volumes:
+      - db-data:/var/lib/postgresql/data     # Kalıcı volume veriler "down"komutund#an korunması için
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "5432:5432"
@@ -23,3 +24,6 @@ services:
       DB_PASSWORD: mypass
     stdin_open: true
     tty: true
+
+volumes:
+  db-data:

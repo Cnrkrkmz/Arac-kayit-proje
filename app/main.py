@@ -1,7 +1,7 @@
 import subprocess
 import os
 import psycopg2
-
+#bağlantı zamanı kontrolü lazım ilk sefer bağlandığımda bazen database bağlanmamış olabiliyor.
 connection = psycopg2.connect(
     dbname=os.getenv("DB_NAME", "mydb"),
     user=os.getenv("DB_USER", "myuser"),
@@ -9,7 +9,9 @@ connection = psycopg2.connect(
     host=os.getenv("DB_HOST", "localhost"),
     port=os.getenv("DB_PORT", "5432")
 )
-
+#çalıştırmak için ilk önce docker-compose up --build
+#eğer hata verirse geçmişten kalan bozuk konteynırlardan dolayı olur docker-compose down kullan eğer verileri silmek istersen --volumes ekle
+#docker-compose run app
 
 cursor = connection.cursor()
 
@@ -20,9 +22,14 @@ def Araçlar():
 
     for data in dataset:
         print(data)
+def menu():
 
-print("1. Araç ekle")
-print("2. Araçları listele")
+    print("1. Araç ekle")
+    print("2. Plaka sorgusu")
+    print("3. Araçları listele")
+
+menu()
+
 secim = input("Seçiminiz: ")
 
 if secim == "1":
@@ -37,8 +44,26 @@ if secim == "1":
     (model, plaka, tarih, fiyat)
 )
     print("Araç başarıyla kaydedildi.")
-elif secim == "2":
+
+    
+
+if secim == "2":
+
+    arananPlaka = input("Aradığınız plakayı giriniz: ")
+
+    cursor.execute("SELECT * FROM araçlar WHERE plaka %s", (arananPlaka))
+
+    for row in cursor.fetchall():
+
+        print(row)
+    
+    
+
+elif secim == "3":
+
     Araçlar();
+   
+    
     
 
 connection.commit()
