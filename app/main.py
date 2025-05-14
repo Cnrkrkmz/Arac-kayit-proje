@@ -45,19 +45,20 @@ if secim == "1":
 )
     print("Araç başarıyla kaydedildi.")
 
-    
+   
 
 if secim == "2":
 
     arananPlaka = input("Aradığınız plakayı giriniz: ")
 
-    cursor.execute("SELECT * FROM araçlar WHERE plaka %s", (arananPlaka))
+    cursor.execute("SELECT * FROM araçlar WHERE plaka = %s", (arananPlaka,)) # "=" işareti eklendi arananPllaka dan sonra "","" eklendi tuple olarak algılaması gerkiyor sql 
 
     for row in cursor.fetchall():
-
-        print(row)
+        
+        print(f"Aranan araba: \n {row}")
+        
     
-    
+  
 
 elif secim == "3":
 
