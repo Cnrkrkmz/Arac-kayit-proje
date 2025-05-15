@@ -1,4 +1,4 @@
-import subprocess
+#import subprocess
 import os
 import psycopg2
 #bağlantı zamanı kontrolü lazım ilk sefer bağlandığımda bazen database bağlanmamış olabiliyor.
@@ -22,57 +22,72 @@ def Araçlar():
 
     for data in dataset:
         print(data)
+
 def menu():
 
     print("1. Araç ekle")
-    print("2. Plaka sorgusu")
-    print("3. Araçları listele")
+    print("2. Araç silme")
+    print("3. Araç arama")
+    print("4. Araçları listele")
+    print("5. Programı kapat")
 
-menu()
-
-secim = input("Seçiminiz: ")
-
-if secim == "1":
+while True:
     
-    model = input("Araba modeli giriniz: ")
-    plaka = input("Plaka giriniz: ")
-    tarih = input("Tarih giriniz: ")
-    fiyat = input("Fiyat bilgisi giriniz: ")
+    menu()
 
-    cursor.execute(
-    "INSERT INTO araçlar (model, plaka, tarih, fiyat) VALUES (%s, %s, %s, %s)",
-    (model, plaka, tarih, fiyat)
-)
-    print("Araç başarıyla kaydedildi.")
+    secim = input("Seçiminiz: ")
 
-   
+    if secim == "1":
+    
+        model = input("Araba modeli giriniz: ")
+        plaka = input("Plaka giriniz: ")
+        tarih = input("Tarih giriniz: ")
+        fiyat = input("Fiyat bilgisi giriniz: ")
 
-if secim == "2":
+        cursor.execute(
+        "INSERT INTO araçlar (model, plaka, tarih, fiyat) VALUES (%s, %s, %s, %s)",
+        (model, plaka.upper(), tarih, fiyat)
+    )
+        print("Araç başarıyla kaydedildi.")
 
-    arananPlaka = input("Aradığınız plakayı giriniz: ")
+    elif secim == "2":
 
-    cursor.execute("SELECT * FROM araçlar WHERE plaka = %s", (arananPlaka,)) # "=" işareti eklendi arananPllaka dan sonra "","" eklendi tuple olarak algılaması gerkiyor sql 
+        arananPlaka = input("Silmek istediğiniz aracın Plakası: ").upper()
 
-    for row in cursor.fetchall():
+        cursor.execute("DELETE FROM araçlar WHERE plaka = %s", ((arananPlaka,)))
+
+        print("İstenilen araç silindi")
+
+    elif secim == "3":
+
+        arananPlaka = input("Aradığınız plakayı giriniz: ").upper()
+
+        cursor.execute("SELECT * FROM araçlar WHERE plaka = %s", (arananPlaka,)) # "=" işareti eklendi arananPllaka dan sonra "","" eklendi tuple olarak algılaması gerkiyor sql 
+
+        for row in cursor.fetchall():
         
-        print(f"Aranan araba: \n {row}")
+            print(f"Aranan araba: \n {row}")
         
-    
-  
 
-elif secim == "3":
+    elif secim == "4":
 
-    Araçlar();
-   
+        Araçlar();
     
-    
+    elif secim == "5":
+
+        print("Programdan çıkılıyor...")
+        
+        break
+
+    else:
+
+        print("geçersiz seçim")
 
 connection.commit()
 
 #subprocess.run(["docker", "compose", "up", "-d"])
 #subprocess.run(["docker", "exec", "-it", "arackayt-docker_db_1", "psql", "-U", "myuser", "-d", "mydb"]) #my_postgres kısmı değişebilir ona 
 #göre yeni isim gerekebilir şu an arackayt-docker_db_1
-
 
 cursor.close()
 connection.close()
