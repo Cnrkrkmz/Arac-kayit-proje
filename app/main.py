@@ -85,8 +85,7 @@ while True:
 
 connection.commit()
 
-#subprocess.run(["docker", "compose", "up", "-d"])
-#subprocess.run(["docker", "exec", "-it", "arackayt-docker_db_1", "psql", "-U", "myuser", "-d", "mydb"]) #my_postgres kısmı değişebilir ona 
+#my_postgres kısmı değişebilir ona 
 #göre yeni isim gerekebilir şu an arackayt-docker_db_1
 
 cursor.close()
